@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UEditor</title>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'UEditor/ueditor/ueditor.config.js' %}"></script>
+    <script src="{% static 'UEditor/ueditor/ueditor.all.min.js' %}"></script>
+</head>
+<body>
+    <div style="width: 100%">
+        <div style="width: 1000px;margin: auto;">
+            <script id="editor" type="text/plain">初始内容</script>
+            <br>
+            <form action="{% url 'show' %}" method="post" id="form">
+                {% csrf_token %}
+                <input id="in" name="content" type="hidden" value="">
+            </form>
+            <button id="btn" onclick="MsgBox()" style="float: right;width: 160px;height: 85px">保存</button>
+        </div>
+    </div>
+    <script>
+        window.ue = UE.getEditor('editor', {
+            'initialFrameHeight': 400,
+            'serverUrl': '/ueditor/upload/',
+            toolbars : [
+                ['fullscreen','paragraph','fontfamily','fontsize','|',
+                'inserttable','deletetable','insertrow','insertcol','deleterow','deletecol','mergeright','mergedown','splittorows','splittocols','splittocells','deletecaption','inserttitle',],
+                ['searchreplace','|','undo', 'redo', '|','justifyleft','justifyright','justifycenter','justifyjustify','bold','italic','underline','fontborder','strikethrough','superscript','subscript',
+                '|','touppercase','tolowercase','|','attachment','map','simpleupload','emotion','spechars','imagenone','imagecenter','imageleft','imageright',]
+            ]
+        });
+
+        function MsgBox() //声明标识符
+        {
+            document.getElementById('in').value = ue.getContent();
+            document.getElementById('form').submit();
+        }
+    </script>
+</body>
+</html>

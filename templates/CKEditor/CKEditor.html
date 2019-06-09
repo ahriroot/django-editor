@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CKEditor</title>
+    <script src="{% static 'CKEditor/ckeditor.js' %}"></script>
+</head>
+<body>
+    <div style="width: 100%">
+        <div style="width: 1000px;margin: auto;">
+            <textarea name="content" id="editor">
+                &lt;p&gt;Here goes the initial content of the editor.&lt;/p&gt;
+            </textarea>
+            <br>
+            <form action="{% url 'show' %}" method="post" id="form">
+                {% csrf_token %}
+                <input id="in" name="content" type="hidden" value="">
+            </form>
+            <button id="btn" onclick="MsgBox()" style="float: right;width: 160px;height: 85px">保存</button>
+        </div>
+    </div>
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl : 'ckeditor/upload?command=QuickUpload&type=Files&responseType=json'
+                },
+                language: 'zh-cn'
+            }).then(newEditor => {
+                editor = newEditor;
+            })
+            .catch( error => {
+                console.log( error );
+            });
+        const editorData = editor.getData();
+
+
+        function MsgBox()
+        {
+            console.log(editor.getData());
+            document.getElementById('in').value = '';
+            {#document.getElementById('form').submit();#}
+        }
+    </script>
+</body>
+</html>

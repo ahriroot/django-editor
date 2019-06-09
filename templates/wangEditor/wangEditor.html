@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wangEditor</title>
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'wangEditor/wangEditor.min.js' %}"></script>
+    <script src="{% static 'highlight.min.js' %}"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        pre code{
+            font-family: "Monaco";
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%">
+        <div style="width: 1000px;margin: auto;">
+            <div id="editor">
+                <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+            </div>
+            <br>
+            <form action="{% url 'show' %}" method="post" id="form">
+                {% csrf_token %}
+                <input id="in" name="content" type="hidden" value="">
+            </form>
+            <button id="btn" onclick="MsgBox()" style="float: right;width: 160px;height: 85px">保存</button>
+        </div>
+    </div>
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+    <script type="text/javascript">
+        var E = window.wangEditor;
+        var editor = new E('#editor');
+        editor.customConfig.uploadImgServer = '/wangeditor/upload/';
+        editor.customConfig.uploadFileName = 'FileName';
+        editor.customConfig.uploadImgParams = {
+            csrfmiddlewaretoken: document.getElementById('csrf_token').value
+        };
+        editor.create();
+
+        function MsgBox()
+        {
+            document.getElementById('in').value = editor.txt.html();
+            document.getElementById('form').submit();
+        }
+    </script>
+
+    <script src="{% static 'highlight.min.js' %}"></script>
+    <script>
+        $(function(){
+            $('pre code').each(function(i, block) {
+                    hljs.highlightBlock(block);
+            });
+        });
+    </script>
+</body>
+</html>
